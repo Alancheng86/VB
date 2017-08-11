@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{5E9E78A0-531B-11CF-91F6-C2863C385E30}#1.0#0"; "Msflxgrd.ocx"
+Object = "{5E9E78A0-531B-11CF-91F6-C2863C385E30}#1.0#0"; "msflxgrd.ocx"
 Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
 Object = "{F1EB48E5-7E03-41F5-A4D0-CA86119EF992}#73.0#0"; "CaControl.ocx"
@@ -1371,14 +1371,14 @@ Private Sub UpDownCurrentData_UpClick()
 
 End Sub
 
-Sub SetGammaData(ByVal LisNo As Integer, lClr As Long)
+Sub SetGammaData(ByVal LisNo As Integer, lClr As Long, ByVal a As Integer)
     
     grdDataList.Row = LisNo
     
     grdDataList.Col = 1
     grdDataList.Text = Text_barcode.Text
-   ' grdDataList.Col = 2
-   ' grdDataList.Text = Format(typCurrentMeasurementData.Sy, "0.00")
+    grdDataList.Col = 2
+    grdDataList.Text = a
    ' grdDataList.Col = 3
    ' grdDataList.Text = Format(typCurrentMeasurementData.Sz, "0.00")
     grdDataList.Col = 4
@@ -1613,19 +1613,19 @@ Private Sub MeasureGamma()
         '-----------显示画面开始---------------------------
         Call frmSet.comsendGrayNum(255, CLR_WHITE, rgbChange)    '参数1：阶数（0～2255）；参数2：全色画面（CLR_RED：全红，CLR_GREEN:全绿，CLR_BLUE:全蓝，CLR_WHITE:全灰）；参数3：rgb是否交换
         SetWin 255, 255, 255
-        xpartmeasure
+        xpartmeasure 1
         Call frmSet.comsendGrayNum(255, CLR_RED, rgbChange)
         SetWin 255, 0, 0
-        xpartmeasure
+        xpartmeasure 2
         Call frmSet.comsendGrayNum(255, CLR_GREEN, rgbChange)
         SetWin 0, 255, 0
-        xpartmeasure
+        xpartmeasure 3
         Call frmSet.comsendGrayNum(255, CLR_BLUE, rgbChange)
         SetWin 0, 0, 255
-        xpartmeasure
+        xpartmeasure 4
         Call frmSet.comsendGrayNum(0, CLR_WHITE, rgbChange)
         SetWin 0, 0, 0
-        xpartmeasure
+        xpartmeasure 5
         
         MsgBox "量测结束，更换产品", vbOKOnly
         SetWin 255, 255, 255
@@ -1636,7 +1636,8 @@ Private Sub MeasureGamma()
    
    
 End Sub
-Private Sub xpartmeasure()
+Private Sub xpartmeasure(ByVal a As Integer)
+
 
     With typCurrentMeasurementData
        
@@ -1667,7 +1668,7 @@ Private Sub xpartmeasure()
             LabelDataVal(2).Caption = Format(.sLv, FORMAT_LV)
             DoEvents
             
-            Call SetGammaData(ListNo, CLR_WHITE)      '  xyLv数据保存于csv窗口
+            Call SetGammaData(ListNo, CLR_WHITE, a)     '  xyLv数据保存于csv窗口
             If ListNo > 8 Then                                   '设定数据窗口内容超过目标行数后自动向上滚动
                 grdDataList.TopRow = grdDataList.TopRow + 1
             End If
